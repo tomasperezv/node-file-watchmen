@@ -1,0 +1,6 @@
+[submodule "src/node-config"]
+	path = src/node-config
+	url = git@github.com:tomasperezv/node-config.git
+[submodule "src/node-log"]
+	path = src/node-log
+	url = git@github.com:tomasperezv/node-log.git

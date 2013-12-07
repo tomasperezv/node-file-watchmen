@@ -66,10 +66,19 @@ var listenToChanges = function(folder, file, config) {
  * @method isValid
  */
 function isValid(filePath, config) {
-  var fileExtension = filePath.split('.').length > 1 ? filePath.split('.').pop() : '';
+  var fileExtension = getFileExtension(filePath);
   return (fileExtension !== '' &&
       typeof config[fileExtension] !== 'undefined' &&
       !isHidden(filePath));
+}
+
+/**
+ * @method getFileExtension
+ * @param {String} filePath
+ * @return {String}
+ */
+function getFileExtension(filePath) {
+  return filePath.split('.').length > 1 ? filePath.split('.').pop() : '';
 }
 
 /**
@@ -97,6 +106,13 @@ function watchFile(filePath, config) {
   log.ok('Watching file ' + filePath);
 
   fs.watchFile(filePath, function(curr, prev) {
+
+    var fileExtension = getFileExtension(filePath);
+    var action = require(config[fileExtension]);
+
+    log.info('Detected change in ' + filePath + ', applying ' + config[fileExtension]);
+    action.check(filePath, log);
+
   });
 
 };

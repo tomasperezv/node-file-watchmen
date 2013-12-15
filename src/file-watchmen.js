@@ -91,6 +91,18 @@ function isHidden(filePath) {
 }
 
 /**
+ * @param {Action} action
+ * @param {String} filePath
+ * @param {Log} log
+ * @method applyAction
+ * @return void
+ */
+function applyAction(action, filePath, fileExtension, log) {
+ log.info('Detected change in ' + filePath + ', applying ' + config[fileExtension]);
+  action.check(filePath, log);
+}
+
+/**
  * @param {String} filePath
  * @method watchFile
  */
@@ -108,10 +120,17 @@ function watchFile(filePath, config) {
   fs.watchFile(filePath, function(curr, prev) {
 
     var fileExtension = getFileExtension(filePath);
-    var action = require(config[fileExtension]);
+    var actionConfig = config[fileExtension];
 
-    log.info('Detected change in ' + filePath + ', applying ' + config[fileExtension]);
-    action.check(filePath, log);
+    if (Object.prototype.toString.call(actionConfig) === '[object Array]') {
+      actionConfig.map(function(current) {
+        var action = require(current);
+        applyAction(action, filePath, fileExtension, log);
+      });
+    } else {
+      var action = require(config[fileExtension]);
+      applyAction(action, filePath, fileExtension, log);
+    }
 
   });
 

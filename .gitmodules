@@ -4,3 +4,6 @@
 [submodule "src/node-log"]
 	path = src/node-log
 	url = git@github.com:tomasperezv/node-log.git
+[submodule "src/external/knwl"]
+	path = src/external/knwl
+	url = git@github.com:tomasperezv/Knwl.js.git

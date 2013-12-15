@@ -1,5 +1,6 @@
 { 
 	"./tmp": {
-		"json": "./actions/check-json"
+		"json": "./actions/check-json",
+		"txt": "./actions/knwl"
 	}
 }

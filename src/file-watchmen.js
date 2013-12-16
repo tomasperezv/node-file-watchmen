@@ -16,18 +16,33 @@ for (var folder in config) {
  */
 function watchFolder(folder, config) {
 
-  fs.readdir(folder, function(err, files) {
-  
+  fs.stat(folder, function(err, stats) {
+
     if (err) {
       log.error('Error reading ' + folder);
       return;
     }
-  
-    for (var i = 0; i < files.length; i++) {
-      listenToChanges(folder, files[i], config);
+
+    if (stats.isFile()) {
+      watchFile(folder, config);
+    } else if (stats.isDirectory()) {
+      fs.readdir(folder, function(err, files) {
+
+        if (err) {
+          log.error('Error reading ' + folder);
+          return;
+        }
+
+        for (var i = 0; i < files.length; i++) {
+          listenToChanges(folder, files[i], config);
+        }
+
+      });
     }
-  
+
   });
+
+
 
 };
 
@@ -98,7 +113,6 @@ function isHidden(filePath) {
  * @return void
  */
 function applyAction(action, filePath, fileExtension, log) {
- log.info('Detected change in ' + filePath + ', applying ' + config[fileExtension]);
   action.check(filePath, log);
 }
 
@@ -124,10 +138,12 @@ function watchFile(filePath, config) {
 
     if (Object.prototype.toString.call(actionConfig) === '[object Array]') {
       actionConfig.map(function(current) {
+        log.info('Detected change in ' + filePath + ', applying ' + current );
         var action = require(current);
         applyAction(action, filePath, fileExtension, log);
       });
     } else {
+      log.info('Detected change in ' + filePath + ', applying ' + config[fileExtension] );
       var action = require(config[fileExtension]);
       applyAction(action, filePath, fileExtension, log);
     }

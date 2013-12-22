@@ -1,0 +1,8 @@
+{
+  "name": "node-file-watchmen",
+  "description": "An extensible node.js file monitoring service.",
+  "author": "tom@0x101.com",
+  "dependencies": {
+  },
+  "engine": "node 0.4.1"
+}

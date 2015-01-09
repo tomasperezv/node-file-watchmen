@@ -42,9 +42,7 @@ function watchFolder(folder, config) {
 
   });
 
-
-
-};
+}
 
 
 /**
@@ -131,7 +129,7 @@ function watchFile(filePath, config) {
 
   log.ok('Watching file ' + filePath);
 
-  fs.watchFile(filePath, function(curr, prev) {
+  fs.watchFile(filePath, function() {
 
     var fileExtension = getFileExtension(filePath);
     var actionConfig = config[fileExtension];
@@ -150,4 +148,4 @@ function watchFile(filePath, config) {
 
   });
 
-};
+}
